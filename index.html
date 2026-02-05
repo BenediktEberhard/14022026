@@ -1,96 +1,84 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Für dich ❤️</title>
-
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ff9a9e, #fecfef);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    overflow: hidden;
-}
-
-.container {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-h1 {
-    color: #ff4d6d;
-}
-
-button {
-    padding: 15px 25px;
-    font-size: 18px;
-    margin: 15px;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-#yes {
-    background: #ff4d6d;
-    color: white;
-}
-
-#yes:hover {
-    transform: scale(1.1);
-}
-
-#no {
-    background: #ccc;
-    position: absolute;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Für dich ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 80%;
+        }
+        h1 { color: #ff4d6d; font-size: 24px; }
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            margin: 15px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            touch-action: none; /* Wichtig für mobiles Wegspringen */
+        }
+        #yes { background: #ff4d6d; color: white; }
+        #no { background: #ccc; position: absolute; }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="container" id="main-container">
     <h1>💌 Möchtest du mein Valentinstags-Date sein? 💌</h1>
     <button id="yes">Ja</button>
     <button id="no">Nein</button>
 </div>
 
 <script>
-const noBtn = document.getElementById("no");
+    const noBtn = document.getElementById("no");
+    const yesBtn = document.getElementById("yes");
 
-document.addEventListener("mousemove", function(e) {
-    const x = Math.random() * (window.innerWidth - 100);
-    const y = Math.random() * (window.innerHeight - 50);
-
-    const rect = noBtn.getBoundingClientRect();
-    const distance = Math.hypot(e.clientX - rect.left, e.clientY - rect.top);
-
-    if (distance < 100) {
+    function moveButton() {
+        // Berechnet zufällige Position, lässt aber Platz für den Button-Rand
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
         noBtn.style.left = x + "px";
         noBtn.style.top = y + "px";
     }
-});
 
-document.getElementById("yes").onclick = function() {
-    document.body.innerHTML = `
-    <h1 style="color:white;font-size:50px;">
-    Yaaaay <br>
-    Wusste ich doch <br>
-    Ich liebe dich ❤️<br>
-    Meine Hübsche, du bist das beste was mir je passiert ist.<br>
-    Danke dir für alles!
-<br>
-    Du wirst mich nie los 
-    </h1>`;
-};
+    // Für PC: Flieht vor der Maus
+    noBtn.addEventListener("mouseover", moveButton);
+
+    // Für iPhone: Flieht bei Berührung (bevor man klicken kann)
+    noBtn.addEventListener("touchstart", function(e) {
+        e.preventDefault();
+        moveButton();
+    });
+
+    // Wenn sie auf "Ja" klickt
+    yesBtn.onclick = function() {
+        document.getElementById("main-container").innerHTML = `
+            <h1 style="color:#ff4d6d; font-size:30px;">Yaaaay! ❤️</h1>
+            <p style="font-size: 20px;">Wusste ich doch!</p>
+            <p style="font-size: 18px;">Ich liebe dich ❤️<br>
+            Meine Hübsche, du bist das Beste, was mir je passiert ist.<br>
+            Danke dir für alles!<br><br>
+            Du wirst mich nie los!</p>
+        `;
+        noBtn.style.display = "none"; // Entfernt den Nein-Button
+    };
 </script>
 
 </body>
