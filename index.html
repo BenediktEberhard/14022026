@@ -1,84 +1,157 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Für dich ❤️</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #ff9a9e, #fecfef);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            overflow: hidden;
-        }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 80%;
-        }
-        h1 { color: #ff4d6d; font-size: 24px; }
-        button {
-            padding: 15px 25px;
-            font-size: 18px;
-            margin: 15px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.2s;
-            touch-action: none; /* Wichtig für mobiles Wegspringen */
-        }
-        #yes { background: #ff4d6d; color: white; }
-        #no { background: #ccc; position: absolute; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Für Dich ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #050816, #0d1b3d);
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+#intro {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.2rem;
+}
+
+.star {
+    position: absolute;
+    font-size: 35px;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.4s;
+    user-select: none;
+}
+
+.star.found {
+    color: gold;
+    text-shadow: 0 0 15px gold;
+    transform: scale(1.3);
+}
+
+#messageBox {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    max-width: 500px;
+    background: rgba(0,0,0,0.8);
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    display: none;
+}
+
+#finalMessage {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    font-size: 1.5rem;
+    line-height: 1.6;
+}
+
+.twinkle {
+    position: absolute;
+    color: white;
+    opacity: 0.3;
+    animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+    50% {
+        opacity: 1;
+    }
+}
+</style>
 </head>
 <body>
 
-<div class="container" id="main-container">
-    <h1>💌 Möchtest du mein Valentinstags-Date sein? 💌</h1>
-    <button id="yes">Ja</button>
-    <button id="no">Nein</button>
+<div id="intro">
+    🌙✨<br><br>
+    Ein paar Sterne für einen Menschen,<br>
+    der manchmal vergisst, wie besonders er ist. ❤️
+</div>
+
+<div id="messageBox"></div>
+
+<div id="finalMessage">
+    <div>
+        ❤️🌙<br><br>
+        Du hast alle Sterne gefunden.<br><br>
+        Aber meinen Lieblingsstern finde ich jeden Tag wieder:<br><br>
+        <strong>Dich. ❤️</strong>
+    </div>
 </div>
 
 <script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
+const messages = [
+    "❤️ Ich bin stolz auf dich.",
+    "✨ Du schaffst mehr, als du dir selbst zutraust.",
+    "🥰 Ich liebe dich über alles und für den Menschen, der du bist.",
+    "🤗 Du musst nicht alles allein tragen.",
+    "❤️ Und egal was passiert: Ich bin da."
+];
 
-    function moveButton() {
-        // Berechnet zufällige Position, lässt aber Platz für den Button-Rand
-        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
-    }
+const positions = [
+    [20,20],
+    [75,25],
+    [35,45],
+    [70,65],
+    [15,75]
+];
 
-    // Für PC: Flieht vor der Maus
-    noBtn.addEventListener("mouseover", moveButton);
+let found = 0;
 
-    // Für iPhone: Flieht bei Berührung (bevor man klicken kann)
-    noBtn.addEventListener("touchstart", function(e) {
-        e.preventDefault();
-        moveButton();
+positions.forEach((pos, index) => {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.innerHTML = "★";
+    star.style.left = pos[0] + "%";
+    star.style.top = pos[1] + "%";
+
+    star.addEventListener("click", () => {
+        if (star.classList.contains("found")) return;
+
+        star.classList.add("found");
+
+        const box = document.getElementById("messageBox");
+        box.innerHTML = messages[index];
+        box.style.display = "block";
+
+        found++;
+
+        if(found === messages.length){
+            setTimeout(() => {
+                document.getElementById("finalMessage").style.display = "flex";
+            }, 1500);
+        }
     });
 
-    // Wenn sie auf "Ja" klickt
-    yesBtn.onclick = function() {
-        document.getElementById("main-container").innerHTML = `
-            <h1 style="color:#ff4d6d; font-size:30px;">Yaaaay! ❤️</h1>
-            <p style="font-size: 20px;">Wusste ich doch!</p>
-            <p style="font-size: 18px;">Ich liebe dich ❤️<br>
-            Meine Hübsche, du bist das Beste, was mir je passiert ist.<br>
-            Danke dir für alles!<br><br>
-            Du wirst mich nie los!</p>
-        `;
-        noBtn.style.display = "none"; // Entfernt den Nein-Button
-    };
+    document.body.appendChild(star);
+});
+
+// Hintergrundsterne
+for(let i = 0; i < 80; i++){
+    const s = document.createElement("div");
+    s.className = "twinkle";
+    s.innerHTML = "•";
+    s.style.left = Math.random()*100 + "%";
+    s.style.top = Math.random()*100 + "%";
+    s.style.animationDelay = Math.random()*3 + "s";
+    document.body.appendChild(s);
+}
 </script>
 
 </body>
